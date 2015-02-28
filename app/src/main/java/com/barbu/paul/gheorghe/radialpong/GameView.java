@@ -89,10 +89,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 		
 		if(this.arena.isBallCollided(ball)){
+			this.ball.bounce();
 			//turn it around
 			//TODO: animate and sound
-			this.ball.setVelocityX(-1*this.ball.getVelocityX());
-			this.ball.setVelocityY(-1*this.ball.getVelocityY());
+//			this.ball.setVelocityX(-1*this.ball.getVelocityX());
+//			this.ball.setVelocityY(-1*this.ball.getVelocityY());
 		}		
 		
 		this.ball.update();

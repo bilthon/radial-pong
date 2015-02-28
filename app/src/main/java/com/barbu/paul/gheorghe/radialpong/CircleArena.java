@@ -100,8 +100,8 @@ public class CircleArena extends Actor {
 				//TODO: do the drag relative to the touch position
 				this.startAngle = this.projectionAngle - 45;
 				
-				Log.d(TAG, "projectionAngle = " + this.projectionAngle);
-				Log.d(TAG, "startAngle = " + this.startAngle);
+//				Log.d(TAG, "projectionAngle = " + this.projectionAngle);
+//				Log.d(TAG, "startAngle = " + this.startAngle);
 				
 				return true;
 			}

@@ -1,12 +1,12 @@
 package com.barbu.paul.gheorghe.radialpong;
 
-import java.util.Random;
-
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 import android.view.MotionEvent;
+
+import java.util.Random;
 
 public class Ball extends Actor {
 	private float radius;
@@ -59,6 +59,10 @@ public class Ball extends Actor {
 	public int getVelocityY(){
 		return this.vy;
 	}
+
+	public int getVelocity(){
+		return (int) Math.sqrt(Math.pow(this.vx,2)+Math.pow(this.vy,2));
+	}
 	
 	public void setVelocityX(int val){
 		this.vx = val;
@@ -71,7 +75,15 @@ public class Ball extends Actor {
 	public float getRadius(){
 		return this.radius;
 	}
-	
+
+	public void bounce(){
+		Log.d(TAG,"Bouncing!");
+		double angle = Math.atan2(this.getVelocityY(), this.getVelocityX());
+		double newAngle = angle + Math.PI*Math.random()*0.1;
+		this.setVelocityX((int) (Math.cos(newAngle) * this.getVelocity() * -1.3));
+		this.setVelocityY((int) (Math.sin(newAngle) * this.getVelocity() * -1.3));
+	}
+
 	@Override
 	public void update() {
 		this.pos.x += vx;
