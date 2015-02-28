@@ -61,9 +61,7 @@ public class CircleArena extends Actor {
 			float touchAngle = computeAngle(x, y);
 			double distToCenter = getDistToCenter(x, y);
 									
-			if(this.startAngle < touchAngle && touchAngle < this.startAngle + this.sweepAngle &&
-					this.radius - this.strokeWidth/2 < distToCenter &&
-					distToCenter < this.radius + this.strokeWidth/2){
+			if(this.startAngle < touchAngle && touchAngle < this.startAngle + this.sweepAngle){
 				
 				Log.d(TAG, "INSIDE!");
 				return true;
@@ -100,8 +98,8 @@ public class CircleArena extends Actor {
 				//TODO: do the drag relative to the touch position
 				this.startAngle = this.projectionAngle - 45;
 				
-				Log.d(TAG, "projectionAngle = " + this.projectionAngle);
-				Log.d(TAG, "startAngle = " + this.startAngle);
+//				Log.d(TAG, "projectionAngle = " + this.projectionAngle);
+//				Log.d(TAG, "startAngle = " + this.startAngle);
 				
 				return true;
 			}
@@ -191,7 +189,7 @@ public class CircleArena extends Actor {
 		if(this.paddingAngle == 0)
 			this.paddingAngle = Math.toDegrees(Math.asin(b.getRadius()/this.radius))*0.75;
 		if(this.pad.startAngle - paddingAngle < ballAngle && ballAngle < this.pad.startAngle + this.pad.sweepAngle + paddingAngle){
-			float minInnerRadius = this.radius - this.pad.strokeWidth/2 - b.getRadius();
+			double minInnerRadius = this.radius - this.pad.strokeWidth/2 - b.getRadius();
 			double d = this.pad.getDistToCenter(ballPos.x, ballPos.y);
 			if(d >= minInnerRadius){
 				Log.d(TAG, "COLLISION!");
