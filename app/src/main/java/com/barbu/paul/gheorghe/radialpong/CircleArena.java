@@ -191,7 +191,7 @@ public class CircleArena extends Actor {
 		if(this.paddingAngle == 0)
 			this.paddingAngle = Math.toDegrees(Math.asin(b.getRadius()/this.radius))*0.75;
 		if(this.pad.startAngle - paddingAngle < ballAngle && ballAngle < this.pad.startAngle + this.pad.sweepAngle + paddingAngle){
-			float minInnerRadius = this.radius - this.pad.strokeWidth/2 - b.getRadius();
+			double minInnerRadius = this.radius - this.pad.strokeWidth/2 - b.getRadius();
 			double d = this.pad.getDistToCenter(ballPos.x, ballPos.y);
 			if(d >= minInnerRadius){
 				Log.d(TAG, "COLLISION!");

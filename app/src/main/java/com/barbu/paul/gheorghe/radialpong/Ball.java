@@ -9,15 +9,21 @@ import android.view.MotionEvent;
 import java.util.Random;
 
 public class Ball extends Actor {
-	private float radius;
+	private double radius;
 	private Point pos = new Point(), displaySize;
 	private Paint paint;
-	private int vx, vy;
+	private double vx, vy;
 
 	private static final float FACTOR = 0.10f; //15% //TODO try on the phone dynamically
-	private static final int SPEED = 64; //this is the squared speed TODO: set from outside, this is the number of pixels per 30th part of a second (see MAX_FPS)
+	private static double MIN_INITIAL_SPEED = 8;
+	private static double MAX_INITIAL_SPEED = 12; //this is the squared speed TODO: set from outside, this is the number of pixels per 30th part of a second (see MAX_FPS)
+	private static double TOP_SPEED = 24;
+	private static double SPEED_INCREMENT = 0.5;
 	private static final String TAG = Ball.class.getSimpleName();
-	
+	private double mInitialSpeed;
+	private double mCurrentSpeed;
+	private int bounceCount = 0;
+
 	public Ball(Point displaySize){
 		this.displaySize = displaySize;
 		
@@ -39,10 +45,11 @@ public class Ball extends Actor {
 		//set the direction
 		Random r = new Random();
 		
-		int val = r.nextInt(SPEED+1);
-		
-		this.vx = (int) Math.sqrt(val) * Helpers.boolToSign(r.nextBoolean());
-		this.vy = (int) Math.sqrt(SPEED-val) * Helpers.boolToSign(r.nextBoolean());
+		mInitialSpeed = MIN_INITIAL_SPEED + r.nextDouble()*(MAX_INITIAL_SPEED - MIN_INITIAL_SPEED);
+		double initialAngle = r.nextDouble() * 2 * Math.PI - Math.PI;
+		this.vx = Math.cos(initialAngle) * mInitialSpeed;
+		this.vy = Math.sin(initialAngle) * mInitialSpeed;
+		mCurrentSpeed = mInitialSpeed;
 	}
 	
 	//TODO: set vx, vy device independent and FPS-aware in order to get a constant game speed
@@ -52,27 +59,27 @@ public class Ball extends Actor {
 		return this.pos;
 	}
 	
-	public int getVelocityX(){
+	public double getVelocityX(){
 		return this.vx;
 	}
 	
-	public int getVelocityY(){
+	public double getVelocityY(){
 		return this.vy;
 	}
 
-	public int getVelocity(){
-		return (int) Math.sqrt(Math.pow(this.vx,2)+Math.pow(this.vy,2));
+	public double getVelocity(){
+		return this.mCurrentSpeed;
 	}
 	
-	public void setVelocityX(int val){
+	public void setVelocityX(double val){
 		this.vx = val;
 	}
 	
-	public void setVelocityY(int val){
+	public void setVelocityY(double val){
 		this.vy = val;
 	}
 	
-	public float getRadius(){
+	public double getRadius(){
 		return this.radius;
 	}
 
@@ -80,8 +87,23 @@ public class Ball extends Actor {
 		Log.d(TAG,"Bouncing!");
 		double angle = Math.atan2(this.getVelocityY(), this.getVelocityX());
 		double newAngle = angle + Math.PI*Math.random()*0.1;
-		this.setVelocityX((int) (Math.cos(newAngle) * this.getVelocity() * -1.3));
-		this.setVelocityY((int) (Math.sin(newAngle) * this.getVelocity() * -1.3));
+		this.setVelocityX(Math.cos(newAngle) * this.getVelocity() * -1);
+		this.setVelocityY(Math.sin(newAngle) * this.getVelocity() * -1);
+		this.bounceCount++;
+		increaseSpeed();
+	}
+
+	/**
+	 * The speed is increased slowly at first and then it reaches a maximum speed increment, until it
+	 * asymptotically reaches the TOP_SPEED value. In order to get the desired function we use a displaced
+	 * sigmoid function.
+	 *
+	 * @see http://en.wikipedia.org/wiki/Sigmoid_function
+	 */
+	private void increaseSpeed(){
+		double sigmoid = (1 / (1 + Math.pow(Math.E, -(this.bounceCount * this.SPEED_INCREMENT - 6 ))));
+		this.mCurrentSpeed = this.mCurrentSpeed + sigmoid * (this.TOP_SPEED - this.mCurrentSpeed);
+		Log.d(TAG,"speed increased to: "+mCurrentSpeed);
 	}
 
 	@Override
@@ -92,7 +114,7 @@ public class Ball extends Actor {
 	
 	@Override
 	public void draw(Canvas c) {
-		c.drawCircle(this.pos.x, this.pos.y, this.radius, this.paint);
+		c.drawCircle((float)this.pos.x, (float)this.pos.y, (float)this.radius, this.paint);
 	}
 
 	@Override
