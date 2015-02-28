@@ -50,8 +50,9 @@ public class Ball extends Actor {
 		this.vx = Math.cos(initialAngle) * mInitialSpeed;
 		this.vy = Math.sin(initialAngle) * mInitialSpeed;
 		mCurrentSpeed = mInitialSpeed;
+		this.bounceCount = 0;
 	}
-	
+
 	//TODO: set vx, vy device independent and FPS-aware in order to get a constant game speed
 	//TODO: change vx and vy according to collisions
 	

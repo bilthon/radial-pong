@@ -61,9 +61,7 @@ public class CircleArena extends Actor {
 			float touchAngle = computeAngle(x, y);
 			double distToCenter = getDistToCenter(x, y);
 									
-			if(this.startAngle < touchAngle && touchAngle < this.startAngle + this.sweepAngle &&
-					this.radius - this.strokeWidth/2 < distToCenter &&
-					distToCenter < this.radius + this.strokeWidth/2){
+			if(this.startAngle < touchAngle && touchAngle < this.startAngle + this.sweepAngle){
 				
 				Log.d(TAG, "INSIDE!");
 				return true;
